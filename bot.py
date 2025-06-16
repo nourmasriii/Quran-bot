@@ -661,3 +661,7 @@ threading.Thread(target=start_telegram_bot).start()
 # تشغيل FastAPI على بورت من بيئة Render
 port = int(os.environ.get("PORT", 8000))
 uvicorn.run(app, host="0.0.0.0", port=port)
+
+git add bot.py requirements.txt
+git commit -m "Add health check with FastAPI"
+git push
