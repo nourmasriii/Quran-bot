@@ -640,3 +640,24 @@ app = ApplicationBuilder().token("توكن_البوت").build()
 app.add_handler(CommandHandler("start", start))
 
 app.run_polling()
+
+from fastapi import FastAPI
+import threading
+import uvicorn
+import os
+
+app = FastAPI()
+
+@app.get("/")
+def health_check():
+    return {"status": "bot is running"}
+
+def start_telegram_bot():
+    application.run_polling()
+
+# تشغيل بوت التليجرام في خيط منفصل (خلفية)
+threading.Thread(target=start_telegram_bot).start()
+
+# تشغيل FastAPI على بورت من بيئة Render
+port = int(os.environ.get("PORT", 8000))
+uvicorn.run(app, host="0.0.0.0", port=port)
