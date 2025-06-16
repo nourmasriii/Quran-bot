@@ -1,5 +1,4 @@
 import os
-import asyncio
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, CommandHandler, filters
 
@@ -611,42 +610,37 @@ pages = {
 "604": "https://i.ibb.co/1fQxRYGG/0604.jpg"
 }
 
-# التوكن مباشرة
-BOT_TOKEN = "7578008932:AAF_k3AS09u0oRdM0Y9kZWbyPMZmoOAMXDU"
-PORT = 8443  # البورت الافتراضي
 
-# رسالة /start
+
+BOT_TOKEN = "7578008932:AAF_k3AS09u0oRdM0Y9kZWbyPMZmoOAMXDU"
+PORT = int(os.environ.get("PORT", 8443))
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "أهلاً وسهلاً بك في بوت صفحات القرآن الكريم 🌸\n"
         "أرسل رقم الصفحة (من 1 إلى 604) وسنرسل لك صورة الصفحة من المصحف الكريم 📖"
     )
 
-# التعامل مع أرقام الصفحات
 async def send_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
     page = update.message.text.strip()
     if page in pages:
         await update.message.reply_photo(photo=pages[page])
     
-
-# التشغيل باستخدام Webhook
-async def main():
+def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, send_page))
 
-    await app.run_webhook(
+    webhook_url = f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/{BOT_TOKEN}"
+
+    app.run_webhook(
         listen="0.0.0.0",
         port=PORT,
-        url_path=BOT_TOKEN,
+        webhook_url_path=BOT_TOKEN,
+        webhook_url=webhook_url,
     )
-
-    webhook_url = f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/{BOT_TOKEN}"
-    await app.bot.set_webhook(webhook_url)
     print(f"✅ Webhook set to {webhook_url}")
 
-    await app.idle()
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
