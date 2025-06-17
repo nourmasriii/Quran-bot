@@ -2,6 +2,9 @@ import os
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, CommandHandler, filters
 
+# خذ رقم البورت من متغيرات البيئة (Render)
+PORT = int(os.environ.get("PORT", 10000))
+
 # قائمة الروابط
 pages = {
 "1": "https://i.ibb.co/G45RFZ73/0001.jpg",
