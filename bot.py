@@ -634,8 +634,6 @@ async def send_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if page in pages:
         await update.message.reply_photo(photo=pages[page])
-    else:
-        await update.message.reply_text("الرقم خارج نطاق صفحات المصحف (من 1 إلى 604).")
     
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
