@@ -615,7 +615,7 @@ pages = {
 
 
 
-BOT_TOKEN = "7578008932:AAF_k3AS09u0oRdM0Y9kZWbyPMZmoOAMXDU"
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 PORT = int(os.environ.get("PORT", 8443))
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -627,11 +627,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def send_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
     page = update.message.text.strip()
 
-    # فلتر: إذا الرسالة مش رقم، تجاهلها
-
-
-    if page in pages:
+    if page.isdigit() and page in pages:
         await update.message.reply_photo(photo=pages[page])
+    # غير هيك، يسكت تماماً وما يرد بشيء
     
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
