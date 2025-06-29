@@ -626,8 +626,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def send_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
     page = update.message.text.strip()
+
+    # فلتر: إذا الرسالة مش رقم، تجاهلها
+    if not page.isdigit():
+        await update.message.reply_text("من فضلك أدخل رقم صفحة فقط بين 1 و604.")
+        return
+
     if page in pages:
         await update.message.reply_photo(photo=pages[page])
+    else:
+        await update.message.reply_text("الرقم خارج نطاق صفحات المصحف (من 1 إلى 604).")
     
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
