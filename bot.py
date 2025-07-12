@@ -618,6 +618,11 @@ pages = {
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 PORT = int(os.environ.get("PORT", 8443))
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import asyncio
+
+OWNER_CHAT_ID = 6115157843  # رقمك على تيليجرام
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "أهلاً وسهلاً بك في بوت صفحات القرآن الكريم 🌸\n"
@@ -630,14 +635,29 @@ async def send_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if page.isdigit() and page in pages:
         await update.message.reply_photo(photo=pages[page])
     # غير هيك، يسكت تماماً وما يرد بشيء
-    
+
+# نبضة الحياة
+async def send_heartbeat(context: ContextTypes.DEFAULT_TYPE):
+    try:
+        await context.bot.send_message(chat_id=OWNER_CHAT_ID, text="📘 بوت صفحات القرآن شغال - نبضة حياة")
+    except Exception as e:
+        print(f"⚠️ خطأ في إرسال نبضة الحياة: {e}")
+
+# بدء الجدولة بعد التشغيل
+async def on_startup(app):
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(lambda: asyncio.create_task(send_heartbeat(app.bot)), 'interval', minutes=10)
+    scheduler.start()
+    print("✅ Scheduler started")
+
 def main():
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app = ApplicationBuilder().token(BOT_TOKEN).post_init(on_startup).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, send_page))
 
     webhook_url = f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/{BOT_TOKEN}"
+    print(f"✅ Webhook set to {webhook_url}")
 
     app.run_webhook(
         listen="0.0.0.0",
@@ -645,7 +665,6 @@ def main():
         url_path=BOT_TOKEN,
         webhook_url=webhook_url,
     )
-    print(f"✅ Webhook set to {webhook_url}")
 
 if __name__ == "__main__":
     main()
