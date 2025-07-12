@@ -639,10 +639,10 @@ async def send_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_photo(photo=pages[page])
     # غير هيك، يسكت تماماً وما يرد بشيء
 
-# نبضة الحياة
+# دالة نبضة الحياة
 async def send_heartbeat(bot):
     try:
-        await context.bot.send_message(chat_id=OWNER_CHAT_ID, text="📘 بوت صفحات القرآن شغال - نبضة حياة")
+        await bot.send_message(chat_id=OWNER_CHAT_ID, text="🔔 البوت شغال - نبضة حياة")
     except Exception as e:
         print(f"⚠️ خطأ في إرسال نبضة الحياة: {e}")
 
