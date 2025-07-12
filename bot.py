@@ -640,7 +640,7 @@ async def send_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # غير هيك، يسكت تماماً وما يرد بشيء
 
 # نبضة الحياة
-async def send_heartbeat(context: ContextTypes.DEFAULT_TYPE):
+async def send_heartbeat(bot):
     try:
         await context.bot.send_message(chat_id=OWNER_CHAT_ID, text="📘 بوت صفحات القرآن شغال - نبضة حياة")
     except Exception as e:
