@@ -631,7 +631,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def send_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
-    return  # تجاهل التحديث إذا لم يكن رسالة نصية
+     return  # تجاهل التحديث إذا لم يكن رسالة نصية
     
     page = update.message.text.strip()
 
