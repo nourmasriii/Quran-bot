@@ -642,9 +642,17 @@ async def send_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # دالة نبضة الحياة
 async def send_heartbeat(bot):
     try:
-        await bot.send_message(chat_id=OWNER_CHAT_ID, text="🔔 البوت شغال - نبضة حياة")
+        await bot.send_message(chat_id=OWNER_CHAT_ID, text="📘 بوت صفحات القرآن شغال - نبضة حياة")
     except Exception as e:
         print(f"⚠️ خطأ في إرسال نبضة الحياة: {e}")
+
+# الجدولة عند التشغيل
+async def on_startup(app):
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(send_heartbeat, 'interval', minutes=10, args=[app.bot])
+    scheduler.start()
+    print("✅ Scheduler started")
+
 
 # بدء الجدولة بعد التشغيل
 async def on_startup(app):
